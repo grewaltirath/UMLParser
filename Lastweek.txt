@@ -1,2 +1,2 @@
-Spent the last week studying about Antlr and how to use it.
+Spent the last week studying about javaparser library and how to use it.
 Studied about UML diagram generation using yUML.
