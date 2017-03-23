@@ -50,4 +50,8 @@ public class ParseEngine {
         return cu;
         
     }
+    public void start() throws Exception {
+        cuArray = getArr(inPath);
+        //getting the compilation unit array list
+    }
     }
