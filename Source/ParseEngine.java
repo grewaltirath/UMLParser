@@ -56,7 +56,9 @@ public class ParseEngine {
         buildMap(cu);
         //build map
         for (CompilationUnit c : cu)
+        {
             yumlCode += parser(c);
+        }
         yumlCode += parseAdditions();
         yumlCode = yumlCodeUniquer(yumlCode);
         System.out.println("Code: " + yumlCode);
