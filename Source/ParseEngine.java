@@ -25,4 +25,9 @@ public class ParseEngine {
         mapClassConn = new HashMap<String, String>();
         yumlCode = "";
     }
+
+    private ArrayList<CompilationUnit> getCuArray(String inPath)
+            throws Exception {
+        
+    }
     }
