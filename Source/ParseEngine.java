@@ -26,8 +26,28 @@ public class ParseEngine {
         yumlCode = "";
     }
 
-    private ArrayList<CompilationUnit> getCuArray(String inPath)
+//Returns an array list of type Compilation Unit
+    private ArrayList<CompilationUnit> getArr(String incomingPath)
             throws Exception {
+                File f1 = new File(incomingPath);
+        ArrayList<CompilationUnit> cu = new ArrayList<CompilationUnit>();
+        for (final File f : folder.listFiles()) {
+            //check for java files inside the folder
+            if (f.isFile() && f.getName().endsWith(".java")) {
+                //Reading the java file
+                FileInputStream in = new FileInputStream(f);
+                CompilationUnit c;
+                try {
+                    //calling the Java parser library to parse the code in the file
+                    c = JavaParser.parse(in);
+                    cu.add(c);
+                } finally {
+                    in.close();
+                }
+            }
+        }
+        //returning the compilation unit array list
+        return cu;
         
     }
     }
