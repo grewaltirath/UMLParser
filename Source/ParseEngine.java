@@ -50,6 +50,20 @@ public class ParseEngine {
         return cu;
         
     }
+//buildMap() function
+      private void buildMap(ArrayList<CompilationUnit> cu1) {
+        for (CompilationUnit cu : cu1) {
+            List<TypeDeclaration> cl = cu.getTypes();
+            for (Node n : cl) {
+                ClassOrInterfaceDeclaration coi = (ClassOrInterfaceDeclaration) n;
+                map.put(coi.getName(), coi.isInterface()); 
+                //put to the map
+                                                           
+            }
+        }
+    }
+
+
     public void start() throws Exception {
         cu = getArr(inPath);
         //getting the compilation unit array list
