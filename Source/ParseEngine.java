@@ -51,7 +51,16 @@ public class ParseEngine {
         
     }
     public void start() throws Exception {
-        cuArray = getArr(inPath);
+        cu = getArr(inPath);
         //getting the compilation unit array list
+        buildMap(cu);
+        //build map
+        for (CompilationUnit c : cu)
+            yumlCode += parser(c);
+        yumlCode += parseAdditions();
+        yumlCode = yumlCodeUniquer(yumlCode);
+        System.out.println("Code: " + yumlCode);
+        GenerateDiagram.generatePNG(yumlCode, outgoingPath);
+        //generate diagram as PNG file
     }
     }
