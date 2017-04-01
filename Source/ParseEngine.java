@@ -83,5 +83,7 @@ public class ParseEngine {
 
 //parseAdditions
     private String parseAdditions() {
+        String result = "";
+        Set<String> keys = mapClassConn.keySet(); // get all keys
         
     }
