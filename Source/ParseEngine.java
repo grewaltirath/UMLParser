@@ -80,3 +80,8 @@ public class ParseEngine {
         //generate diagram as PNG file
     }
     }
+
+//parseAdditions
+    private String parseAdditions() {
+        
+    }
