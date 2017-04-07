@@ -211,6 +211,62 @@ for (BodyDeclaration bd : ((TypeDeclaration) node).getMembers()) {
             }
         }
         
+       //parsing the instance variables
+        boolean secondParameter = false;
+        for (BodyDeclaration bd : ((TypeDeclaration) node).getMembers()) {
+            //check for instance of Field Declaration
+            if (bd instanceof FieldDeclaration) {
+                FieldDeclaration fd = ((FieldDeclaration) bd);
+                String fieldScope = symbol(
+                        bd.toStringWithoutComments().substring(0,
+                                bd.toStringWithoutComments().indexOf(" ")));
+                String fieldClass = swapBrack(fd.getType().toString());
+                String fieldName = fd.getChildrenNodes().get(1).toString();
+                if (fieldName.contains("="))
+                    fieldName = fd.getChildrenNodes().get(1).toString()
+                            .substring(0, fd.getChildrenNodes().get(1)
+                                    .toString().indexOf("=") - 1);
+                // Change scope of getter, setters
+                if (fieldScope.equals("-")
+                        && makeFieldPublic.contains(fieldName.toLowerCase())) {
+                    fieldScope = "+";
+                }
+                String getDepen = "";
+                boolean getDepenMultiple = false;
+                if (fieldClass.contains("(")) {
+                    getDepen = fieldClass.substring(fieldClass.indexOf("(") + 1,
+                            fieldClass.indexOf(")"));
+                    getDepenMultiple = true;
+                } else if (map.containsKey(fieldClass)) {
+                    getDepen = fieldClass;
+                }
+                if (getDepen.length() > 0 && map.containsKey(getDepen)) {
+                    String connection = "-";
+
+                    if (mapClassConn
+                            .containsKey(getDepen + "-" + classShortName)) {
+                        connection = mapClassConn
+                                .get(getDepen + "-" + classShortName);
+                        if (getDepenMultiple)
+                            connection = "*" + connection;
+                        mapClassConn.put(getDepen + "-" + classShortName,
+                                connection);
+                    } else {
+                        if (getDepenMultiple)
+                            connection += "*";
+                        mapClassConn.put(classShortName + "-" + getDepen,
+                                connection);
+                    }
+                }
+                if (fieldScope == "+" || fieldScope == "-") {
+                    if (nextField)
+                        variables += "; ";
+                    variables += fieldScope + " " + fieldName + " : " + fieldClass;
+                    secondParameter = true;
+                }
+            }
+
+        }
         
     }
 
