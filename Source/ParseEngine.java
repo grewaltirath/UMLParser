@@ -150,6 +150,66 @@ private String javaCodeParserr(CompilationUnit cu) {
             }
         }
 
+        //Parsing the java code for methods
+for (BodyDeclaration bd : ((TypeDeclaration) node).getMembers()) {
+            if (bd instanceof MethodDeclaration) {
+                //check instance of MethodDeclaration
+                MethodDeclaration md = ((MethodDeclaration) bd);
+            
+                if (md.getDeclarationAsString().startsWith("public")
+                        && !cl.isInterface()) {
+                    //check for public methods and not interfaces
+                    if (md.getName().startsWith("set")
+                            || md.getName().startsWith("get")) {
+                        String varName = md.getName().substring(3);
+                        makeFieldPublic.add(varName.toLowerCase());
+                    } else {
+                        if (secondParameter)
+                            functions += ";";
+                        functions += "+ " + md.getName() + "(";
+                        for (Object gcn : md.getChildrenNodes()) {
+                            if (gcn instanceof Parameter) {
+                                Parameter paramCast = (Parameter) gcn;
+                                String paramClass = paramCast.getType()
+                                        .toString();
+                                String paramName = paramCast.getChildrenNodes()
+                                        .get(0).toString();
+                                functions += paramName + " : " + paramClass;
+                                if (map.containsKey(paramClass)
+                                        && !map.get(classShortName)) {
+                                    additions += "[" + classShortName
+                                            + "] uses -.->";
+                                    if (map.get(paramClass))
+                                        additions += "[<<interface>>;"
+                                                + paramClass + "]";
+                                    else
+                                        additions += "[" + paramClass + "]";
+                                }
+                                additions += ",";
+                            } else {
+                                String methodBody[] = gcn.toString().split(" ");
+                                for (String foo : methodBody) {
+                                    if (map.containsKey(foo)
+                                            && !map.get(classShortName)) {
+                                        additions += "[" + classShortName
+                                                + "] uses -.->";
+                                        if (map.get(foo))
+                                            additions += "[<<interface>>;" + foo
+                                                    + "]";
+                                        else
+                                            additions += "[" + foo + "]";
+                                        additions += ",";
+                                    }
+                                }
+                            }
+                        }
+                        functions += ") : " + md.getType();
+                        secondParameter = true;
+                    }
+                }
+            }
+        }
+        
         
     }
 
