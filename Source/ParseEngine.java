@@ -163,6 +163,7 @@ for (BodyDeclaration bd : ((TypeDeclaration) node).getMembers()) {
                             || md.getName().startsWith("get")) {
                         String varName = md.getName().substring(3);
                         makeFieldPublic.add(varName.toLowerCase());
+                        //for setters and getters
                     } else {
                         if (secondParameter)
                             functions += ";";
