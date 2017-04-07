@@ -109,7 +109,48 @@ private String javaCodeParserr(CompilationUnit cu) {
         name += cl.getName();
         classShortName = cl.getName();
 
-       
+        // for the constructor method
+        boolean secondParameter = false;
+        for (BodyDeclaration bd : ((TypeDeclaration) node).getMembers()) {
+            // check if instance of ConstructorDeclaration
+
+            if (bd instanceof ConstructorDeclaration) {
+                ConstructorDeclaration cd = ((ConstructorDeclaration) bd);
+                if (cd.getDeclarationAsString().startsWith("public")
+                        && !cl.isInterface()) {
+                    //check if it starts with public and is not a interface
+                    if (secondParameter)
+                        functions += ";";
+                    functions += "+ " + cd.getName() + "(";
+                        //get name of the method
+                    for (Object gcn : cd.getChildrenNodes()) {
+                        //for teh method parameters
+                        if (gcn instanceof Parameter) {
+                            Parameter paramCast = (Parameter) gcn;
+                            String paramClass = paramCast.getType().toString();
+                            String paramName = paramCast.getChildrenNodes()
+                                    .get(0).toString();
+                            functions += paramName + " : " + paramClass;
+                            if (map.containsKey(paramClass)
+                                    && !map.get(classShortName)) {
+                                additions += "[" + classShortName
+                                        + "] uses -.->";
+                                if (map.get(paramClass))
+                                    additions += "[<<interface>>;" + paramClass
+                                            + "]";
+                                else
+                                    additions += "[" + paramClass + "]";
+                            }
+                            additions += ",";
+                        }
+                    }
+                    functions += ")";
+                    secondParameter = true;
+                }
+            }
+        }
+
+        
     }
 
 
