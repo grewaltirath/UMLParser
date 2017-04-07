@@ -14,7 +14,7 @@ public class ParseEngine {
     final String outgoingPath;
     HashMap<String, Boolean> map;
     HashMap<String, String> mapClassConn;
-    String yumlCode;
+    String s;
     ArrayList<CompilationUnit> list;
 
 //Initializing the constructor
@@ -70,17 +70,24 @@ public class ParseEngine {
         //getting the compilation unit array list
         createDict(list);
         //build map
-        for (CompilationUnit c : cu)
+        for (CompilationUnit c : list)
         {
-            yumlCode += parser(c);
+            s += javaCodeParserr(c);
         }
-        yumlCode += parseAdditions();
-        yumlCode = yumlCodeUniquer(yumlCode);
-        System.out.println("Code: " + yumlCode);
-        GenerateDiagram.generatePNG(yumlCode, outgoingPath);
+        s += parseAdditions();
+        s = yumlCodeUniquer(s);
+        System.out.println("Code: " + s);
+        GenerateDiagram.generatePNG(s, outgoingPath);
         //generate diagram as PNG file
     }
     }
+
+
+private String javaCodeParserr(CompilationUnit cu) {
+        
+    }
+
+
 
 //parseAdditions
     private String parseAdditions() {
