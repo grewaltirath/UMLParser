@@ -15,7 +15,7 @@ public class ParseEngine {
     HashMap<String, Boolean> map;
     HashMap<String, String> mapClassConn;
     String yumlCode;
-    ArrayList<CompilationUnit> cuArray;
+    ArrayList<CompilationUnit> list;
 
 //Initializing the constructor
     ParseEngine(String incomingPath, String outgoingFile) {
@@ -51,14 +51,14 @@ public class ParseEngine {
         return cu;
         
     }
-//buildMap() function
-      private void buildMap(ArrayList<CompilationUnit> cu1) {
-        for (CompilationUnit cu : cu1) {
-            List<TypeDeclaration> cl = cu.getTypes();
-            for (Node n : cl) {
-                ClassOrInterfaceDeclaration coi = (ClassOrInterfaceDeclaration) n;
-                map.put(coi.getName(), coi.isInterface()); 
-                //put to the map
+//createDict() function
+      private void createDict(ArrayList<CompilationUnit> list1) {
+        for (CompilationUnit c : list1) {
+            List<TypeDeclaration> list2 = c.getTypes(); //return the list of types declared in this compilation unit.
+            for (Node n : list2) {
+                ClassOrInterfaceDeclaration var = (ClassOrInterfaceDeclaration) n;
+                map.put(var.getName(), var.isInterface()); 
+                //put to the map the name and boolean value if it is interface or not
                                                            
             }
         }
@@ -66,9 +66,9 @@ public class ParseEngine {
 
 
     public void start() throws Exception {
-        cu = getArrayList(incomingPath);
+        list = getArrayList(incomingPath);
         //getting the compilation unit array list
-        buildMap(cu);
+        createDict(list);
         //build map
         for (CompilationUnit c : cu)
         {
