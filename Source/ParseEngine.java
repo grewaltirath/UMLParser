@@ -27,26 +27,27 @@ public class ParseEngine {
     }
 
 //Returns an array list of type Compilation Unit
-    private ArrayList<CompilationUnit> getArr(String incomingPath)
+    private ArrayList<CompilationUnit> getArrayList(String incomingPath)
             throws Exception {
                 File f1 = new File(incomingPath);
         ArrayList<CompilationUnit> cu = new ArrayList<CompilationUnit>();
-        for (final File f : folder.listFiles()) {
+        //creating arraylist of type Compilation Unit
+        for (final File 2 : folder.listFiles()) {
             //check for java files inside the folder
-            if (f.isFile() && f.getName().endsWith(".java")) {
-                //Reading the java file
-                FileInputStream in = new FileInputStream(f);
+            if (f2.isFile() && f2.getName().endsWith(".java")) {
+                //Checking for files and getting all the java files
+                FileInputStream input = new FileInputStream(f2);
                 CompilationUnit c;
                 try {
                     //calling the Java parser library to parse the code in the file
-                    c = JavaParser.parse(in);
-                    cu.add(c);
+                    c = JavaParser.parse(input);
+                    cu.add(c);//adding to the arraylist
                 } finally {
-                    in.close();
+                    input.close();//close the FileInput Stream
                 }
             }
         }
-        //returning the compilation unit array list
+        //returning the compilation unit type array list
         return cu;
         
     }
@@ -65,7 +66,7 @@ public class ParseEngine {
 
 
     public void start() throws Exception {
-        cu = getArr(inPath);
+        cu = getArrayList(incomingPath);
         //getting the compilation unit array list
         buildMap(cu);
         //build map
