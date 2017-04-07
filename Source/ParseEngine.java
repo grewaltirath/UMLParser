@@ -84,7 +84,32 @@ public class ParseEngine {
 
 
 private String javaCodeParserr(CompilationUnit cu) {
-        
+        String ans = "";
+        String name = "";
+        String classShortName = "";
+        String functions = "";
+        String variables = "";
+        String additions = ",";
+
+        ArrayList<String> createPublic = new ArrayList<String>();
+        List<TypeDeclaration> list3 = cu.getTypes(); 
+        Node node = list3.get(0); //considering that there are no more classes nested within
+
+       
+        ClassOrInterfaceDeclaration cl = (ClassOrInterfaceDeclaration) node;
+        //getting the name of the class
+        if (cl.isInterface()) {
+            //if it is an interface, append interface 
+            name = "[" + "<<interface>>;";
+        } else {
+            //class
+            name = "[";
+        }
+        //get name
+        name += cl.getName();
+        classShortName = cl.getName();
+
+       
     }
 
 
