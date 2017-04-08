@@ -267,7 +267,22 @@ for (BodyDeclaration bd : ((TypeDeclaration) node).getMembers()) {
             }
 
         }
-        
+        //checking for extends and implements
+        if (cl.getExtends() != null) {
+            additions += "[" + classShortName + "] " + "-^ " + coi.getExtends();
+            additions += ",";
+        }
+        if (cl.getImplements() != null) {
+            List<ClassOrInterfaceType> interfaceList = (List<ClassOrInterfaceType>) coi
+                    .getImplements();
+            for (ClassOrInterfaceType intface : interfaceList) {
+                additions += "[" + classShortName + "] " + "-.-^ " + "["
+                        + "<<interface>>;" + intface + "]";
+                additions += ",";
+            }
+        }
+        // integrating everything
+       
     }
 
 
