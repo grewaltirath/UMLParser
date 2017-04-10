@@ -13,7 +13,7 @@ public class ClassParser {
     final String incomingPath;
     final String outgoingPath;
     HashMap<String, Boolean> map;
-    HashMap<String, String> mapClassConn;
+    HashMap<String, String> cc;
     String s;
     ArrayList<CompilationUnit> list;
 
@@ -22,7 +22,7 @@ public class ClassParser {
         this.incomingPath = incomingPath;
         this.outgoingPath = incomingPath + "\\" + outgoingFile + ".png";
         map = new HashMap<String, Boolean>();
-        mapClassConn = new HashMap<String, String>();
+        cc = new HashMap<String, String>();
         yumlCode = "";
     }
 
@@ -74,13 +74,13 @@ public class ClassParser {
         {
             s += javaCodeParserr(c);
         }
-        s += parseAdditions();
-        s = yumlCodeUniquer(s);
+        s += add();
+        s = yUML(s);
         System.out.println("Code: " + s);
         GenerateDiagram.generatePNG(s, outgoingPath);
         //generate diagram as PNG file
     }
-    }
+    
 
 
 private String javaCodeParserr(CompilationUnit cu) {
@@ -243,18 +243,18 @@ for (BodyDeclaration bd : ((TypeDeclaration) node).getMembers()) {
                 if (getDepen.length() > 0 && map.containsKey(getDepen)) {
                     String connection = "-";
 
-                    if (mapClassConn
+                    if (cc
                             .containsKey(getDepen + "-" + classShortName)) {
-                        connection = mapClassConn
+                        connection = cc
                                 .get(getDepen + "-" + classShortName);
                         if (getDepenMultiple)
                             connection = "*" + connection;
-                        mapClassConn.put(getDepen + "-" + classShortName,
+                        cc.put(getDepen + "-" + classShortName,
                                 connection);
                     } else {
                         if (getDepenMultiple)
                             connection += "*";
-                        mapClassConn.put(classShortName + "-" + getDepen,
+                        cc.put(classShortName + "-" + getDepen,
                                 connection);
                     }
                 }
@@ -320,29 +320,39 @@ private String amSymbol(String s1) {
     }
 
 
-//parseAdditions
-    private String parseAdditions() {
-        String result = "";
-        Set<String> keys = mapClassConn.keySet(); // get all keys
-        for (String i : keys) {
-            String[] classes = i.split("-");
+
+    private String add() {
+        String a = "";
+        Set<String> keys = cc.keySet(); 
+        for (String s1 : keys) {
+            String[] classes = s1.split("-");
             if (map.get(classes[0]))
-                result += "[<<interface>>;" + classes[0] + "]";
-            else
-                result += "[" + classes[0] + "]";
-            result += mapClassConn.get(i); // Add connection
+            {
+                a += "[<<interface>>;" + classes[0] + "]";
+            }
+            else{
+                a += "[" + classes[0] + "]";
+            }
+            a += cc.get(s1);
             if (map.get(classes[1]))
-                result += "[<<interface>>;" + classes[1] + "]";
-            else
-                result += "[" + classes[1] + "]";
-            result += ",";
+            {
+                a += "[<<interface>>;" + classes[1] + "]";
+            }
+            else{
+                a += "[" + classes[1] + "]";
+            }
+            a += ",";
         }
-        return result;
+        return a;
     }
-    private String yumlCodeUniquer(String code) {
-        String[] codeLines = code.split(",");
-        String[] uniqueCodeLines = new LinkedHashSet<String>(
-                Arrays.asList(codeLines)).toArray(new String[0]);
-        String result = String.join(",", uniqueCodeLines);
-        return result;
+
+
+    private String yUML(String s3) {
+        String[] s1 = s3.split(",");
+        String[] s2 = new LinkedHashSet<String>(
+        Arrays.asList(s1)).toArray(new String[0]);
+        String answer = String.join(",", s2);
+        return answer;
     }
+
+}
