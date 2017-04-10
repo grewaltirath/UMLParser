@@ -9,7 +9,7 @@ import com.github.javaparser.ast.body.*;
 import com.github.javaparser.ast.expr.MethodCallExpr;
 import com.github.javaparser.ast.stmt.*;
 
-public class ParseSequenceEngine{
+public class SequenceParser{
 
     final String incomingPath;
     final String outgoingPath;
@@ -24,7 +24,7 @@ public class ParseSequenceEngine{
 
 //Initialize the constructor
 
-    ParseSequenceEngine(String incomingPath, String incomingClassName, String incomingFunctionName,
+    SequenceParser(String incomingPath, String incomingClassName, String incomingFunctionName,
             String outgoingFile) {
         this.incomingPath = inPath;
         this.outgoingPath = inPath + "\\" + outFile + ".png";

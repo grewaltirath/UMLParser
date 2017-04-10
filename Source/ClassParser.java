@@ -9,7 +9,7 @@ import com.github.javaparser.ast.*;
 import com.github.javaparser.ast.body.*;
 import com.github.javaparser.ast.type.ClassOrInterfaceType;
 
-public class ParseEngine {
+public class ClassParser {
     final String incomingPath;
     final String outgoingPath;
     HashMap<String, Boolean> map;
@@ -18,7 +18,7 @@ public class ParseEngine {
     ArrayList<CompilationUnit> list;
 
 //Initializing the constructor
-    ParseEngine(String incomingPath, String outgoingFile) {
+    ClassParser(String incomingPath, String outgoingFile) {
         this.incomingPath = incomingPath;
         this.outgoingPath = incomingPath + "\\" + outgoingFile + ".png";
         map = new HashMap<String, Boolean>();
