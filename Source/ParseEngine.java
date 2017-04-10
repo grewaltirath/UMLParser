@@ -75,12 +75,12 @@ public class ClassParser {
             s += javaCodeParserr(c);
         }
         s += add();
-        s = yumlCodeUniquer(s);
+        s = yUML(s);
         System.out.println("Code: " + s);
         GenerateDiagram.generatePNG(s, outgoingPath);
         //generate diagram as PNG file
     }
-    }
+    
 
 
 private String javaCodeParserr(CompilationUnit cu) {
@@ -346,11 +346,13 @@ private String amSymbol(String s1) {
         return a;
     }
 
-    
-    private String yumlCodeUniquer(String code) {
-        String[] codeLines = code.split(",");
-        String[] uniqueCodeLines = new LinkedHashSet<String>(
-                Arrays.asList(codeLines)).toArray(new String[0]);
-        String result = String.join(",", uniqueCodeLines);
-        return result;
+
+    private String yUML(String s) {
+        String[] s1 = s.split(",");
+        String[] s2 = new LinkedHashSet<String>(
+        Arrays.asList(s1)).toArray(new String[0]);
+        String answer = String.join(",", s2);
+        return answer;
     }
+
+}
