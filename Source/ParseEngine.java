@@ -217,10 +217,10 @@ for (BodyDeclaration bd : ((TypeDeclaration) node).getMembers()) {
             //check for instance of Field Declaration
             if (bd instanceof FieldDeclaration) {
                 FieldDeclaration fd = ((FieldDeclaration) bd);
-                String fieldScope = symbol(
+                String fieldScope = amSymbol(
                         bd.toStringWithoutComments().substring(0,
                                 bd.toStringWithoutComments().indexOf(" ")));
-                String fieldClass = swapBrack(fd.getType().toString());
+                String fieldClass = swap(fd.getType().toString());
                 String fieldName = fd.getChildrenNodes().get(1).toString();
                 if (fieldName.contains("="))
                     fieldName = fd.getChildrenNodes().get(1).toString()
@@ -294,6 +294,15 @@ for (BodyDeclaration bd : ((TypeDeclaration) node).getMembers()) {
         ans=ans+"]";
         ans=ans+additions;
         return ans; 
+    }
+
+//swapping the brackets method
+     private String swap(String s1) {
+        s1 = s1.replace("<", "(");
+        s1 = s1.replace(">", ")");
+        s1 = s1.replace("[", "(");
+        s1 = s1.replace("]", ")");
+        return s1;
     }
 
 
