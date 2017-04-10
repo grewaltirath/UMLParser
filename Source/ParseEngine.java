@@ -305,6 +305,19 @@ for (BodyDeclaration bd : ((TypeDeclaration) node).getMembers()) {
         return s1;
     }
 
+//Symbols for access modifiers: Public and Private
+private String amSymbol(String s1) {
+    if(s1.equals("public"))
+    {
+        return "+";
+    }
+    else if(s1.equals("private")){
+        return "-";
+    }
+    else{
+        return "";
+    }
+    }
 
 
 //parseAdditions
