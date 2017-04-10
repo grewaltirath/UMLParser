@@ -243,8 +243,7 @@ for (BodyDeclaration bd : ((TypeDeclaration) node).getMembers()) {
                 if (getDepen.length() > 0 && map.containsKey(getDepen)) {
                     String connection = "-";
 
-                    if (cc
-                            .containsKey(getDepen + "-" + classShortName)) {
+                    if (cc.containsKey(getDepen + "-" + classShortName)) {
                         connection = cc
                                 .get(getDepen + "-" + classShortName);
                         if (getDepenMultiple)
