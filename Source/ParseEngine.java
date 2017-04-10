@@ -32,7 +32,7 @@ public class ParseEngine {
                 File f1 = new File(incomingPath);
         ArrayList<CompilationUnit> cu = new ArrayList<CompilationUnit>();
         //creating arraylist of type Compilation Unit
-        for (final File 2 : folder.listFiles()) {
+        for (final File f2 : folder.listFiles()) {
             //check for java files inside the folder
             if (f2.isFile() && f2.getName().endsWith(".java")) {
                 //Checking for files and getting all the java files
@@ -282,7 +282,18 @@ for (BodyDeclaration bd : ((TypeDeclaration) node).getMembers()) {
             }
         }
         // integrating everything
-       
+        ans=ans+name;
+        boolean flag1=fields.isEmpty();
+        boolean flag2=functions.isEmpty();
+        if (!flag1) {
+            ans=ans+"|"+swap(variables);
+        }
+        if (!flag2) {
+            ans=ans+"|"+swap(functions); 
+        }
+        ans=ans+"]";
+        ans=ans+additions;
+        return ans; 
     }
 
 
