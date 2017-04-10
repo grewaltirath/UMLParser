@@ -8,7 +8,7 @@ public class UMLParser {
             ClassParser cp = new ClassParser(args[1], args[2]);
             //calling the parse engine constructor for class diagram
             cp.start();
-        } else if (args[0].equals(("seq"))) {
+        } else if (args[0].equals(("sequence"))) {
         //check if the argument is a sequence diagram
             SequenceParser sp = new SequenceParser(args[1], args[2], args[3], args[4]);
             //calling the parse sequence engine constructor for sequence diagram
