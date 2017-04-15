@@ -1,3 +1,4 @@
+package umlparser.umlparser;
 import java.io.*;
 import java.util.*;
 import java.lang.*;
@@ -23,7 +24,7 @@ public class ClassParser {
         this.outgoingPath = incomingPath + "\\" + outgoingFile + ".png";
         map = new HashMap<String, Boolean>();
         cc = new HashMap<String, String>();
-        yumlCode = "";
+        s = "";
     }
 
 //Returns an array list of type Compilation Unit
@@ -32,7 +33,7 @@ public class ClassParser {
                 File f1 = new File(incomingPath);
         ArrayList<CompilationUnit> cu = new ArrayList<CompilationUnit>();
         //creating arraylist of type Compilation Unit
-        for (final File f2 : folder.listFiles()) {
+        for (final File f2 : f1.listFiles()) {
             //check for java files inside the folder
             if (f2.isFile() && f2.getName().endsWith(".java")) {
                 //Checking for files and getting all the java files
@@ -41,7 +42,10 @@ public class ClassParser {
                 try {
                     //calling the Java parser library to parse the code in the file
                     c = JavaParser.parse(input);
-                    cu.add(c);//adding to the arraylist
+                    //System.out.println("C: "+c);
+
+                    cu.add(c);//adding to the arraylist, the array list contains the entire code from the java files.
+                    //System.out.println("Array List: "+cu);
                 } finally {
                     input.close();//close the FileInput Stream
                 }
@@ -54,7 +58,8 @@ public class ClassParser {
 //createDict() function
       private void createDict(ArrayList<CompilationUnit> list1) {
         for (CompilationUnit c : list1) {
-            List<TypeDeclaration> list2 = c.getTypes(); //return the list of types declared in this compilation unit.
+            List<TypeDeclaration> list2 = c.getTypes(); //return the list of types declared in this compilation unit (contains same java code).
+            //System.out.println("Array List: "+list2);
             for (Node n : list2) {
                 ClassOrInterfaceDeclaration var = (ClassOrInterfaceDeclaration) n;
                 map.put(var.getName(), var.isInterface()); 
@@ -62,22 +67,26 @@ public class ClassParser {
                                                            
             }
         }
+
     }
 
 
-    public void start() throws Exception {
+    public void run() throws Exception {
         list = getArrayList(incomingPath);
-        //getting the compilation unit array list
+        //getting all the java files in array list
         createDict(list);
         //build map
         for (CompilationUnit c : list)
         {
-            s += javaCodeParserr(c);
+            s += javaCodeParserr(c); //generating grammar for all the java files and adding all the grammar to one.
+            System.out.println("S: "+s);
+
         }
-        s += add();
+        s += add(); //for associations and relations between classes
+        System.out.println("S after add() method: "+s);
         s = yUML(s);
         System.out.println("Code: " + s);
-        GenerateDiagram.generatePNG(s, outgoingPath);
+        Draw.image(s, outgoingPath);
         //generate diagram as PNG file
     }
     
@@ -93,8 +102,8 @@ private String javaCodeParserr(CompilationUnit cu) {
 
         ArrayList<String> createPublic = new ArrayList<String>();
         List<TypeDeclaration> list3 = cu.getTypes(); 
-        Node node = list3.get(0); //considering that there are no more classes nested within
-
+        Node node = list3.get(0); //contains the java code
+        //System.out.println("N:"+node);
        
         ClassOrInterfaceDeclaration cl = (ClassOrInterfaceDeclaration) node;
         //getting the name of the class
@@ -119,7 +128,7 @@ private String javaCodeParserr(CompilationUnit cu) {
                 if (cd.getDeclarationAsString().startsWith("public")
                         && !cl.isInterface()) {
                     //check if it starts with public and is not a interface
-                    if (secondParameter)
+                    if (secondParameter)//delimitter between paramers
                         functions += ";";
                     functions += "+ " + cd.getName() + "(";
                         //get name of the method
@@ -162,7 +171,7 @@ for (BodyDeclaration bd : ((TypeDeclaration) node).getMembers()) {
                     if (md.getName().startsWith("set")
                             || md.getName().startsWith("get")) {
                         String varName = md.getName().substring(3);
-                        makeFieldPublic.add(varName.toLowerCase());
+                        createPublic.add(varName.toLowerCase());
                         //for setters and getters
                     } else {
                         if (secondParameter)
@@ -212,7 +221,7 @@ for (BodyDeclaration bd : ((TypeDeclaration) node).getMembers()) {
         }
         
        //parsing the instance variables
-        boolean secondParameter = false;
+        boolean secondVariable = false;
         for (BodyDeclaration bd : ((TypeDeclaration) node).getMembers()) {
             //check for instance of Field Declaration
             if (bd instanceof FieldDeclaration) {
@@ -228,7 +237,7 @@ for (BodyDeclaration bd : ((TypeDeclaration) node).getMembers()) {
                                     .toString().indexOf("=") - 1);
                 // Change scope of getter, setters
                 if (fieldScope.equals("-")
-                        && makeFieldPublic.contains(fieldName.toLowerCase())) {
+                        && createPublic.contains(fieldName.toLowerCase())) {
                     fieldScope = "+";
                 }
                 String getDepen = "";
@@ -258,21 +267,21 @@ for (BodyDeclaration bd : ((TypeDeclaration) node).getMembers()) {
                     }
                 }
                 if (fieldScope == "+" || fieldScope == "-") {
-                    if (nextField)
+                    if (secondVariable)
                         variables += "; ";
                     variables += fieldScope + " " + fieldName + " : " + fieldClass;
-                    secondParameter = true;
+                    secondVariable = true;
                 }
             }
 
         }
         //checking for extends and implements
         if (cl.getExtends() != null) {
-            additions += "[" + classShortName + "] " + "-^ " + coi.getExtends();
+            additions += "[" + classShortName + "] " + "-^ " + cl.getExtends();
             additions += ",";
         }
         if (cl.getImplements() != null) {
-            List<ClassOrInterfaceType> interfaceList = (List<ClassOrInterfaceType>) coi
+            List<ClassOrInterfaceType> interfaceList = (List<ClassOrInterfaceType>) cl
                     .getImplements();
             for (ClassOrInterfaceType intface : interfaceList) {
                 additions += "[" + classShortName + "] " + "-.-^ " + "["
@@ -282,7 +291,7 @@ for (BodyDeclaration bd : ((TypeDeclaration) node).getMembers()) {
         }
         // integrating everything
         ans=ans+name;
-        boolean flag1=fields.isEmpty();
+        boolean flag1=variables.isEmpty();
         boolean flag2=functions.isEmpty();
         if (!flag1) {
             ans=ans+"|"+swap(variables);
@@ -297,7 +306,7 @@ for (BodyDeclaration bd : ((TypeDeclaration) node).getMembers()) {
 
 //swapping the brackets method
      private String swap(String s1) {
-        s1 = s1.replace("<", "(");
+        s1 = s1.replace("<", "(");//replacing < with (
         s1 = s1.replace(">", ")");
         s1 = s1.replace("[", "(");
         s1 = s1.replace("]", ")");
@@ -319,7 +328,7 @@ private String amSymbol(String s1) {
     }
 
 
-
+//for relations between classes
     private String add() {
         String a = "";
         Set<String> keys = cc.keySet(); 
@@ -327,18 +336,24 @@ private String amSymbol(String s1) {
             String[] classes = s1.split("-");
             if (map.get(classes[0]))
             {
+                //System.out.println("classes[0]: "+classes[0]);
                 a += "[<<interface>>;" + classes[0] + "]";
             }
             else{
+                //System.out.println("classes[0]: "+classes[0]);
                 a += "[" + classes[0] + "]";
+                //getting classs name from here
             }
             a += cc.get(s1);
+            //System.out.println("a: "+a);
             if (map.get(classes[1]))
             {
                 a += "[<<interface>>;" + classes[1] + "]";
             }
             else{
+                //System.out.println("classes[1]: "+classes[1]);
                 a += "[" + classes[1] + "]";
+                //getting classs name from here
             }
             a += ",";
         }
