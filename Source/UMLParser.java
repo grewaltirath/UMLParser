@@ -1,20 +1,20 @@
+package umlparser.umlparser;
 
 public class UMLParser {
 
     public static void main(String[] args) throws Exception {
-
-        if (args[0].equals("class")) {
-        //check if it wants the class diagram
-            ClassParser cp = new ClassParser(args[1], args[2]);
-            //calling the parse engine constructor for class diagram
-            cp.start();
-        } else if (args[0].equals(("sequence"))) {
-        //check if the argument is a sequence diagram
-            SequenceParser sp = new SequenceParser(args[1], args[2], args[3], args[4]);
-            //calling the parse sequence engine constructor for sequence diagram
-            sp.start();
-        } else {
-            System.out.println("Inappropriate argument: " + args[0]);
+        //command line for class diagram
+        if (args.length>0 && args[0].equals("class")) {
+            ClassParser c = new ClassParser(args[1], args[2]);
+            c.run();
+        }
+        //command line for sequence diagram
+        else if (args[0].equals(("sequence")) && args.length>0) {
+            SequenceParser s = new SequenceParser(args[1], args[2], args[3], args[4]);
+            s.run();
+        }
+        else {
+            System.out.println("Inappropriate argument " + args[0]);
         }
 
     }
