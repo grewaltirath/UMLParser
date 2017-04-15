@@ -8,7 +8,7 @@ public class Draw {
     public static Boolean image(String content, String dir) {
 
         try {
-            String ref = "http://yuml.me/diagram/plain/class/" + content
+            String ref = "https://yuml.me/diagram/plain/class/" + content
                     + ".png"; //link to generate diagram
             URL u = new URL(ref);
             HttpURLConnection h = (HttpURLConnection) u.openConnection();
@@ -29,12 +29,13 @@ public class Draw {
             op.close();
             h.disconnect();
         } 
+        catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
         catch (IOException e) {
             e.printStackTrace();
         }
-        catch (MalformedURLException e) {
-            e.printStackTrace();
-        } 
+        
         return null;
     }
 }
