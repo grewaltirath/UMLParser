@@ -122,7 +122,14 @@ public class SequenceParser {
         return list;
     }
 
-  
+    private String draw(String s1) throws IOException {
+
+        OutputStream op = new FileOutputStream(outgoing);
+        SourceStringReader ssr = new SourceStringReader(s1);
+        String s2 = ssr.generateImage(op);
+        return s2;
+
+    }
 
    
 
