@@ -33,7 +33,42 @@ public class SequenceParser {
         s = "@startuml\n";
     }
 
+//run() method is called first
+    public void run() throws Exception {
+        c = getArrayList(incoming);
+        createDictionary();
+        s=s+"actor user #black\n";
+        s=s+"user" + " -> " + claassName + " : " + function + "\n";
+        s=s+"activate " + classMap.get(function) + "\n";
+        generateGrammar(function);
+        s=s+"@enduml";
+        draw(s);
+        System.out.println("Code: \n" + s);
+    }
 
+  
+
+//same as class diagram getting the array list of compliation unit type
+    private ArrayList<CompilationUnit> getArrayList(String incoming)
+            throws Exception {
+        File f1 = new File(incoming);
+        ArrayList<CompilationUnit> list = new ArrayList<CompilationUnit>();
+        for (final File f : f1.listFiles()) {
+            if (f.isFile() && f.getName().endsWith(".java")) {
+                FileInputStream fileInput = new FileInputStream(f);
+                CompilationUnit compilation;
+                try {
+                    compilation = JavaParser.parse(fileInput);
+                    list.add(compilation);
+                } finally {
+                    fileInput.close();
+                }
+            }
+        }
+        return list;
+    }
+
+   
 
    
 
