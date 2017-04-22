@@ -46,7 +46,61 @@ public class SequenceParser {
         System.out.println("Code: \n" + s);
     }
 
-  
+    private void generateGrammar(String functionCaller) {
+
+        for (MethodCallExpr methodCall : methodMap.get(functionCaller)) {
+            String cc = classMap.get(functionCaller);
+            String functionCallee = methodCall.getName();
+            String calleeClass = classMap.get(functionCallee);
+            if (classMap.containsKey(functionCallee)) {
+                s=s+ cc + " -> " + calleeClass + " : "
+                        + methodCall.toStringWithoutComments() + "\n";
+                s=s+"activate " + calleeClass + "\n";
+                generateGrammar(functionCallee);
+                s=s+calleeClass + " -->> " + cc + "\n";
+                s=s+"deactivate " + calleeClass + "\n";
+            }
+        }
+    }
+
+    private void createDictionary() {
+        for (CompilationUnit compilation : c) {
+            String nameOfClass = "";
+            List<TypeDeclaration> l = compilation.getTypes();
+            for (Node n : l) {
+                ClassOrInterfaceDeclaration cid = (ClassOrInterfaceDeclaration) n;
+                nameOfClass = cid.getName();
+                for (BodyDeclaration body : ((TypeDeclaration) cid)
+                        .getMembers()) {
+                    //checking for insatnce of MethodDeclaration
+                    if (body instanceof MethodDeclaration) {
+                        MethodDeclaration dec = (MethodDeclaration) body;
+                        ArrayList<MethodCallExpr> list3 = new ArrayList<MethodCallExpr>();
+                        for (Object block : dec.getChildrenNodes()) {
+                            //checking for insatnce of Block declaration
+                            if (block instanceof BlockStmt) {
+                                for (Object expr : ((Node) block)
+                                        .getChildrenNodes()) {
+                                    //checking for insatnce of Expression statement
+                                    if (expr instanceof ExpressionStmt) {
+                                        if (((ExpressionStmt) (expr))
+                                                .getExpression() instanceof MethodCallExpr) {
+                                            list3.add(
+                                                    (MethodCallExpr) (((ExpressionStmt) (expr))
+                                                            .getExpression()));
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        methodMap.put(dec.getName(), list3);
+                        classMap.put(dec.getName(), nameOfClass);
+                    }
+                }
+            }
+        }
+        //printMaps();
+    }
 
 //same as class diagram getting the array list of compliation unit type
     private ArrayList<CompilationUnit> getArrayList(String incoming)
@@ -68,7 +122,7 @@ public class SequenceParser {
         return list;
     }
 
-   
+  
 
    
 
